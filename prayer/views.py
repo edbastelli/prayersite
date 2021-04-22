@@ -18,26 +18,33 @@ def newprayer(request):
     return render(request, 'prayer/newprayer.html')
 
 def createprayer(request):
-    try:
-        prayer=Prayer(
-            prayer_title=request.POST['prayertitle'],
-            prayer_text=request.POST['prayertext'],
-            created_date=timezone.now(),
-            last_prayed_date=timezone.now(),
-            frequency=1
-        )
-    except:
-        return HttpResponse("Not sure what happened yet.")
+    if(request.POST):
+        try:
+            prayer=Prayer(
+                prayer_title=request.POST['prayertitle'],
+                prayer_text=request.POST['prayertext'],
+                created_date=timezone.now(),
+                last_prayed_date=timezone.now(),
+                frequency=1
+            )
+        except:
+            return HttpResponse("Not sure what happened yet.")
+        else:
+            prayer.save()
+            return HttpResponseRedirect(reverse('prayer:index'))
     else:
-        prayer.save()
         return HttpResponseRedirect(reverse('prayer:index'))
 
 def prayed(request, prayer_id):
-    prayer=get_object_or_404(Prayer, pk=prayer_id)
-    try:
-        prayer.update_last_prayed()
-    except:
-        HttpResponse("Got an exception in prayed")
+    if(request.POST):
+        try:
+            prayer=Prayer.objects.get(pk=request.POST['prayer_id'])
+            prayer.update_last_prayed()
+        except:
+            HttpResponse("Got an exception in prayed")
+        else:
+            prayer.save()
+            return HttpResponseRedirect(reverse('prayer:index'))
     else:
-        prayer.save()
-        return HttpResponseRedirect(reverse('prayer:index'))
+        prayer = get_object_or_404(Prayer, pk=prayer_id)
+        return HttpResponseRedirect(reverse('prayer:detail', args=(prayer_id,)))

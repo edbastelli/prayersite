@@ -8,6 +8,7 @@
     <p>{{ prayer.prayer_text }}</p>
     <form action="{% url 'prayer:prayed' prayer.id %}" method="post">
       {% csrf_token %}
+      <input type="hidden" id="prayer_id" name="prayer_id" value="{{ prayer.id }}">
       <input type="submit" value="Prayed">
     </form>
   </body>
