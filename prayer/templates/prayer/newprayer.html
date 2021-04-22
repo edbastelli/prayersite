@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add a New Prayer</title>
+  </head>
+  <body>
+    <h1>New Prayer</h1>
+    <form action="{% url 'prayer:create prayer' %}" method="post">
+      {% csrf_token %}
+      <label for="prayertitle">Prayer title:</label><br>
+      <input type="text" name="prayertitle" id="prayertitle" required><br>
+      <label for="prayertext">Prayer text:</label><br>
+      <textarea name="prayertext" rows="4" cols="40"></textarea><br>
+      <input type="submit" value="Submit"/>
+    </form>
+  </body>
+</html>

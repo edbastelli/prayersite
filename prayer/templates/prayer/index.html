@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Prayer List</title>
+  </head>
+  <body>
+    <h4>"Rejoice always, pray without ceasing, give thanks in all circumstances; for this is the will of God in Christ Jesus for you."<br>
+    - 1 Thessalonians 5:16-18 (ESV)</h4>
+    {% if latest_prayer_list %}
+    <ul>
+      {% for prayer in latest_prayer_list %}
+      <li><a href="{% url 'prayer:detail' prayer.id %}">{{prayer.prayer_title}}</a></li>
+      {% endfor %}
+      <br>
+      <a href="/prayer/new/">Add another prayer!</a>
+    </ul>
+    {% else %}
+      <p><a href="{% url 'prayer:new prayer' %}">Add your first prayer!</a></p>
+    {% endif %}
+  </body>
+</html>
