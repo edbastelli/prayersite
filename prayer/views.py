@@ -31,3 +31,13 @@ def createprayer(request):
     else:
         prayer.save()
         return HttpResponseRedirect(reverse('prayer:index'))
+
+def prayed(request, prayer_id):
+    prayer=get_object_or_404(Prayer, pk=prayer_id)
+    try:
+        prayer.update_last_prayed()
+    except:
+        HttpResponse("Got an exception in prayed")
+    else:
+        prayer.save()
+        return HttpResponseRedirect(reverse('prayer:index'))

@@ -8,4 +8,5 @@ urlpatterns = [
     path('<int:prayer_id>/', views.detail, name='detail'),
     path('new/', views.newprayer, name='new prayer'),
     path('create/', views.createprayer, name='create prayer'),
+    path('<int:prayer_id>/prayed', views.prayed, name='prayed'),
 ]

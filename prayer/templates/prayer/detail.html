@@ -6,5 +6,9 @@
   <body>
     <h2>{{ prayer.prayer_title }}</h2>
     <p>{{ prayer.prayer_text }}</p>
+    <form action="{% url 'prayer:prayed' prayer.id %}" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Prayed">
+    </form>
   </body>
 </html>
