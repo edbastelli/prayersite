@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Prayer detail</title>
-  </head>
-  <body>
-    <h2>{{ prayer.prayer_title }}</h2>
-    <p>{{ prayer.prayer_text }}</p>
-    <form action="{% url 'prayer:prayed' prayer.id %}" method="post">
-      {% csrf_token %}
-      <input type="hidden" id="prayer_id" name="prayer_id" value="{{ prayer.id }}">
-      <input type="submit" value="Prayed">
-    </form>
-  </body>
-</html>
+{% extends "prayer/base.html" %}
+{% block title %}Prayer Detail{% endblock %}
+{% block content %}
+  <h1>Prayer</h1>
+  <h2>{{ prayer.prayer_title }}</h2>
+  <p>{{ prayer.prayer_text }}</p>
+  <form action="{% url 'prayer:prayed' prayer.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" id="prayer_id" name="prayer_id" value="{{ prayer.id }}">
+    <input type="submit" value="Prayed">
+  </form>
+{% endblock %}

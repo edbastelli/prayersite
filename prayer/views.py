@@ -2,23 +2,35 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
+from django.views import generic
 from .models import Prayer
 
 # Create your views here.
-def index(request):
-    latest_prayer_list = Prayer.objects.order_by('last_prayed_date')[:20]
-    context = {'latest_prayer_list': latest_prayer_list}
-    return render(request, 'prayer/index.html', context)
+class IndexView(generic.ListView):
+    template_name = 'prayer/index.html'
+    context_object_name = 'latest_prayer_list'
 
-def detail(request, prayer_id):
-    prayer = get_object_or_404(Prayer, pk=prayer_id)
-    return render(request, 'prayer/detail.html', {'prayer': prayer})
+    def get_queryset(self):
+        return Prayer.objects.order_by('last_prayed_date')[:20]
+
+class DetailView(generic.DetailView):
+    model = Prayer
+    template_name = 'prayer/detail.html'
+
+# def index(request):
+#     latest_prayer_list = Prayer.objects.order_by('last_prayed_date')[:20]
+#     context = {'latest_prayer_list': latest_prayer_list}
+#     return render(request, 'prayer/index.html', context)
+
+# def detail(request, prayer_id):
+#     prayer = get_object_or_404(Prayer, pk=prayer_id)
+#     return render(request, 'prayer/detail.html', {'prayer': prayer})
 
 def newprayer(request):
     return render(request, 'prayer/newprayer.html')
 
 def createprayer(request):
-    if(request.POST):
+    if(request.method == 'POST'):
         try:
             prayer=Prayer(
                 prayer_title=request.POST['prayertitle'],
@@ -36,7 +48,7 @@ def createprayer(request):
         return HttpResponseRedirect(reverse('prayer:index'))
 
 def prayed(request, prayer_id):
-    if(request.POST):
+    if(request.method  == 'POST'):
         try:
             prayer=Prayer.objects.get(pk=request.POST['prayer_id'])
             prayer.update_last_prayed()
