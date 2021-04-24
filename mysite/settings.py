@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'account.apps.AccountConfig',
     'prayer.apps.PrayerConfig',
     'polls.apps.PollsConfig',
     'django.contrib.admin',
