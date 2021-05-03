@@ -4,9 +4,11 @@
   <h1>Prayer</h1>
   <h2>{{ prayer.prayer_title }}</h2>
   <p>{{ prayer.prayer_text }}</p>
+  {% if prayer.id %}
   <form action="{% url 'prayer:prayed' prayer.id %}" method="post">
     {% csrf_token %}
     <input type="hidden" id="prayer_id" name="prayer_id" value="{{ prayer.id }}">
     <input type="submit" value="Prayed">
   </form>
+  {% endif %}
 {% endblock %}

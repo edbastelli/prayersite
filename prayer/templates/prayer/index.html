@@ -7,7 +7,10 @@
   {% if latest_prayer_list %}
   <a href="/prayer/new/">Add a new prayer</a>
   <ul>
-    {% for prayer in latest_prayer_list %}
+    {% for prayer in latest_prayer_list.daily_prayers %}
+    <li><a href="{% url 'prayer:detail' prayer.id %}">{{prayer.prayer_title}}</a></li>
+    {% endfor %}
+    {% for prayer in latest_prayer_list.rotating_prayers %}
     <li><a href="{% url 'prayer:detail' prayer.id %}">{{prayer.prayer_title}}</a></li>
     {% endfor %}
     <br>

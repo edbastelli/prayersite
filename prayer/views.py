@@ -1,5 +1,5 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils import timezone
 from django.urls import reverse
 from django.views import generic
@@ -11,7 +11,10 @@ class IndexView(generic.ListView):
     context_object_name = 'latest_prayer_list'
 
     def get_queryset(self):
-        return Prayer.objects.order_by('last_prayed_date')[:20]
+        user=self.request.user
+        queryset = {'daily_prayers': user.prayers.filter(frequency="1"),
+                    'rotating_prayers': user.prayers.filter(frequency="-1").order_by('last_prayed_date')[:3]}
+        return queryset
 
 class DetailView(generic.DetailView):
     model = Prayer
@@ -22,9 +25,12 @@ class DetailView(generic.DetailView):
 #     context = {'latest_prayer_list': latest_prayer_list}
 #     return render(request, 'prayer/index.html', context)
 
-# def detail(request, prayer_id):
-#     prayer = get_object_or_404(Prayer, pk=prayer_id)
-#     return render(request, 'prayer/detail.html', {'prayer': prayer})
+def detail(request, pk):
+    prayer = get_object_or_404(Prayer, pk=pk)
+    if prayer.user == request.user:
+        return render(request, 'prayer/detail.html', {'prayer': prayer})
+    else:
+        return HttpResponseRedirect(reverse('prayer:index'))
 
 def newprayer(request):
     return render(request, 'prayer/newprayer.html')
@@ -37,7 +43,9 @@ def createprayer(request):
                 prayer_text=request.POST['prayertext'],
                 created_date=timezone.now(),
                 last_prayed_date=timezone.now(),
-                frequency=1
+                user=request.user,
+                frequency=request.POST['frequency'],
+                expire_date=request.POST['expire_date']
             )
         except:
             return HttpResponse("Not sure what happened yet.")
