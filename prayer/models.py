@@ -30,3 +30,13 @@ class Prayer(models.Model):
     def update_last_prayed(self):
         self.last_prayed_date=timezone.now()
         self.save()
+
+class DailyPrayerList(models.Model):
+    class Meta(object):
+        unique_together = (("date", "user"), )
+
+    date = models.DateField(auto_now_add=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                related_name='daily_list',
+                                on_delete=models.CASCADE)
+    prayer = models.ManyToManyField(Prayer)

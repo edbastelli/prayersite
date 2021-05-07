@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load prayer_extras %}
+{% load tz %}
 {% block title %}My Prayer List{% endblock %}
 {% block content %}
   <h1>Today's Prayer List</h1>
@@ -7,11 +9,10 @@
   {% if latest_prayer_list %}
   <a href="/prayer/new/">Add a new prayer</a>
   <ul>
-    {% for prayer in latest_prayer_list.daily_prayers %}
-    <li><a href="{% url 'prayer:detail' prayer.id %}">{{prayer.prayer_title}}</a></li>
-    {% endfor %}
-    {% for prayer in latest_prayer_list.rotating_prayers %}
-    <li><a href="{% url 'prayer:detail' prayer.id %}">{{prayer.prayer_title}}</a></li>
+    {% for prayer in latest_prayer_list.prayer|getall %}
+    <li {% if prayer.last_prayed_date|localtime|dateof == latest_prayer_list.date %}class="complete"{% endif %}>
+      <a href="{% url 'prayer:detail' prayer.id %}">{{prayer.prayer_title}}</a>
+    </li>
     {% endfor %}
     <br>
   </ul>

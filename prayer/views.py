@@ -3,18 +3,30 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils import timezone
 from django.urls import reverse
 from django.views import generic
-from .models import Prayer
+from .models import Prayer, DailyPrayerList
+from itertools import chain
+from datetime import date, datetime
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 class IndexView(generic.ListView):
+    model = DailyPrayerList
     template_name = 'prayer/index.html'
     context_object_name = 'latest_prayer_list'
 
     def get_queryset(self):
         user=self.request.user
-        queryset = {'daily_prayers': user.prayers.filter(frequency="1"),
-                    'rotating_prayers': user.prayers.filter(frequency="-1").order_by('last_prayed_date')[:3]}
-        return queryset
+        try:
+            # return user.daily_list.get(date=date.today()).prayer.all()
+            return user.daily_list.get(date=date.today())
+        except ObjectDoesNotExist:
+            dlist = user.daily_list.create()
+            daily_prayers=user.prayers.filter(frequency=1)
+            rotating_prayers=user.prayers.filter(frequency=-1).order_by('last_prayed_date')[:3]
+            dlist.prayer.set(list(chain(daily_prayers, rotating_prayers)))
+            dlist.save()
+            # return user.daily_list.get(date=date.today()).prayer.all()
+            return dlist
 
 class DetailView(generic.DetailView):
     model = Prayer

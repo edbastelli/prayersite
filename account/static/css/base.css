@@ -39,6 +39,10 @@ ul {
   list-style: none;
 }
 
+li.complete {
+  text-decoration: line-through;
+}
+
 #header {
     padding:10px 100px;
     font-size:14px;
