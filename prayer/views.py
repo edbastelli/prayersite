@@ -80,3 +80,15 @@ def prayed(request, prayer_id):
     else:
         prayer = get_object_or_404(Prayer, pk=prayer_id)
         return HttpResponseRedirect(reverse('prayer:detail', args=(prayer_id,)))
+
+class PrayerUpdateView(generic.edit.UpdateView):
+    model = Prayer
+    fields = ['prayer_title', 'prayer_text', 'expire_date', 'frequency']
+    template_name_suffix = '_update_form'
+
+    def get_queryset(self):
+        user = self.request.user
+        try:
+            return user.prayers.filter(pk=self.kwargs['pk'])
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('prayer:index'))

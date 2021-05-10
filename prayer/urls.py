@@ -10,4 +10,5 @@ urlpatterns = [
     path('new/', views.newprayer, name='new prayer'),
     path('create/', views.createprayer, name='create prayer'),
     path('<int:prayer_id>/prayed/', views.prayed, name='prayed'),
+    path('<int:pk>/update/', login_required(views.PrayerUpdateView.as_view()), name='update_prayer')
 ]

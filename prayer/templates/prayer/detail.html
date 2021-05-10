@@ -5,10 +5,13 @@
   <h2>{{ prayer.prayer_title }}</h2>
   <p>{{ prayer.prayer_text }}</p>
   {% if prayer.id %}
-  <form action="{% url 'prayer:prayed' prayer.id %}" method="post">
+  <form action="{% url 'prayer:prayed' prayer.id %}" method="post" style="display:inline;">
     {% csrf_token %}
     <input type="hidden" id="prayer_id" name="prayer_id" value="{{ prayer.id }}">
     <input type="submit" value="Prayed">
   </form>
+  <a href="{% url 'prayer:update_prayer' prayer.id %}">
+    <button>Update</button>
+  </a>
   {% endif %}
 {% endblock %}
