@@ -1,9 +1,12 @@
 {% extends "base.html" %}
+{% load prayer_extras %}
 {% block title %}Prayer Detail{% endblock %}
 {% block content %}
   <h1>Prayer</h1>
   <h2>{{ prayer.prayer_title }}</h2>
   <p>{{ prayer.prayer_text }}</p>
+  <p>{{ prayer|displayFrequency }} List</p>
+  <p>Expires: {{ prayer|expireDate }}</p>
   {% if prayer.id %}
   <form action="{% url 'prayer:prayed' prayer.id %}" method="post" style="display:inline;">
     {% csrf_token %}

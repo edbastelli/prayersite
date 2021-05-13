@@ -21,8 +21,8 @@ class IndexView(generic.ListView):
             return user.daily_list.get(date=date.today())
         except ObjectDoesNotExist:
             dlist = user.daily_list.create()
-            daily_prayers=user.prayers.filter(frequency=1)
-            rotating_prayers=user.prayers.filter(frequency=-1).order_by('last_prayed_date')[:3]
+            daily_prayers=user.prayers.filter(frequency=1).exclude(expire_date__lt = date.today())
+            rotating_prayers=user.prayers.filter(frequency=-1).exclude(expire_date__lt = date.today()).order_by('last_prayed_date')[:3]
             dlist.prayer.set(list(chain(daily_prayers, rotating_prayers)))
             dlist.save()
             # return user.daily_list.get(date=date.today()).prayer.all()

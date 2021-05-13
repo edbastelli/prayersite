@@ -10,3 +10,14 @@ def dateof(date_time):
 @register.filter
 def getall(queryset):
     return queryset.all()
+
+@register.filter
+def displayFrequency(prayer):
+    return prayer.get_frequency_display()
+
+@register.filter
+def expireDate(prayer):
+    if prayer.expire_date:
+        return prayer.expire_date
+    else:
+        return "Never"
