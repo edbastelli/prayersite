@@ -43,6 +43,10 @@ li.complete {
   text-decoration: line-through;
 }
 
+div.complete {
+  text-decoration: line-through;
+}
+
 #header {
     padding:10px 100px;
     font-size:14px;
@@ -93,6 +97,7 @@ li.complete {
 }
 
 /* forms */
+/*
 form {
     overflow:auto;
 }
@@ -147,6 +152,7 @@ button {
     float:left;
     font-size:13px;
 }
+*/
 /* messages */
 ul.messages {
     margin:10px 100px;

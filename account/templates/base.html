@@ -3,33 +3,37 @@
 <html>
 <head>
   <title>{% block title %}{% endblock%}</title>
+  <link rel="stylesheet" href="{% static 'vendor/css/bootstrap.min.css' %}">
   <link href="{% static "css/base.css" %}" rel="stylesheet">
+  <script src="{% static 'vendor/js/jquery-3.6.0.min.js' %}"></script>
+  <script src="{% static 'vendor/js/bootstrap.min.js' %}"></script>
 </head>
 <body>
-  <div id="header">
-    <span class="logo">Prayer List</span>
-    {% if request.user.is_authenticated %}
-      <ul class="menu">
-        <li {% if section == "dashboard" %}class="selected"{% endif %}>
-          <a href="{% url "dashboard" %}">My dashboard</a>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'prayer:index' %}">PrayerList</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'prayer:index' %}">Home <span class="sr-only">(current)</span></a>
         </li>
-        <li {% if section == "prayer list" %}class="selected"{% endif %}>
-          <a href="{% url "prayer:index" %}">Prayer list</a>
-        </li>
-        <li {% if section == "people" %}class="selected"{% endif %}>
-          <a href="#">People</a>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
         </li>
       </ul>
-    {% endif %}
-    <span class="user">
-      {% if request.user.is_authenticated %}
-        Hello {{ request.user.first_name }},
-        <a href="{% url "logout" %}">Logout</a>
-      {% else %}
-        <a href="{% url "login" %}">Log-in</a>
-      {% endif %}
-    </span>
-  </div>
+      <span class="navbar-text">
+        {% if request.user.is_authenticated %}
+          Hello {{ request.user.first_name }},
+          <a href="{% url "logout" %}">Logout</a>
+        {% else %}
+          <a href="{% url "login" %}">Log-in</a>
+        {% endif %}
+      </span>
+    </div>
+  </nav>
+
   <div id="content">
     {% block content %}
     {% endblock %}

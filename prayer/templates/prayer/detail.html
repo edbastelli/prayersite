@@ -11,10 +11,10 @@
   <form action="{% url 'prayer:prayed' prayer.id %}" method="post" style="display:inline;">
     {% csrf_token %}
     <input type="hidden" id="prayer_id" name="prayer_id" value="{{ prayer.id }}">
-    <input type="submit" value="Prayed">
+    <input type="submit" class="btn btn-dark" value="Prayed">
   </form>
   <a href="{% url 'prayer:update_prayer' prayer.id %}">
-    <button>Update</button>
+    <button class="btn btn-dark">Update</button>
   </a>
   {% endif %}
 {% endblock %}

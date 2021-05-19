@@ -1,21 +1,41 @@
 {% extends "base.html" %}
 {% load prayer_extras %}
 {% load tz %}
-{% block title %}My Prayer List{% endblock %}
+{% block title %}PrayerList{% endblock %}
 {% block content %}
   <h1>Today's Prayer List</h1>
-  <h4>"Rejoice always, pray without ceasing, give thanks in all circumstances; for this is the will of God in Christ Jesus for you."<br>
-  - 1 Thessalonians 5:16-18 (ESV)</h4>
+  <p>"Rejoice always, pray without ceasing, give thanks in all circumstances; for this is the will of God in Christ Jesus for you."<br>
+  - 1 Thessalonians 5:16-18 (ESV)</p>
   {% if latest_prayer_list %}
   <a href="/prayer/new/">Add a new prayer</a>
-  <ul>
-    {% for prayer in latest_prayer_list.prayer|getall %}
-    <li {% if prayer.last_prayed_date|localtime|dateof == latest_prayer_list.date %}class="complete"{% endif %}>
-      <a href="{% url 'prayer:detail' prayer.id %}">{{prayer.prayer_title}}</a>
-    </li>
+  <div class="accordion" id="prayerAccordian" style="max-width:600px;">
+    {%for prayer in latest_prayer_list.prayer|getall %}
+    <div class="card">
+      <div class="card-header" id="heading{{prayer.id}}">
+        <h5 class="mb-0">
+          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{prayer.id}}" aria-expanded="false" aria-controls="collapse{{prayer.id}}">
+            <div {% if prayer.last_prayed_date|localtime|dateof == latest_prayer_list.date %}class="complete"{% endif %}>{{ prayer.prayer_title }}</div>
+          </button>
+        </h5>
+      </div>
+      <div id="collapse{{prayer.id}}" class="collapse" aria-labelledby="heading{{prayer.id}}" data-parent="#prayerAccordian">
+        <div class="card-body">
+          <p>{{ prayer.prayer_text }}</p>
+          {% if prayer.id %}
+          <form action="{% url 'prayer:prayed' prayer.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" id="prayer_id" name="prayer_id" value="{{ prayer.id }}">
+            <input type="submit" class="btn btn-dark" value="Prayed">
+          </form>
+          <a href="{% url 'prayer:detail' prayer.id %}">
+            <button class="btn btn-dark">Details</button>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
     {% endfor %}
-    <br>
-  </ul>
+  </div>
   {% else %}
     <p><a href="{% url 'prayer:new prayer' %}">Add your first prayer!</a></p>
   {% endif %}
