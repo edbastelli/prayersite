@@ -28,6 +28,15 @@ class IndexView(generic.ListView):
             # return user.daily_list.get(date=date.today()).prayer.all()
             return dlist
 
+class MyPrayersView(generic.ListView):
+    model = Prayer
+    template_name = 'prayer/myprayers.html'
+    # context_object_name = 'all_prayers'
+
+    def get_queryset(self):
+        user=self.request.user
+        return user.prayers.all().order_by('-created_date')
+
 class DetailView(generic.DetailView):
     model = Prayer
     template_name = 'prayer/detail.html'
@@ -57,13 +66,14 @@ def createprayer(request):
                 last_prayed_date=timezone.now(),
                 user=request.user,
                 frequency=request.POST['frequency'],
-                expire_date=request.POST['expire_date']
             )
+            if request.POST['expire_date']:
+                prayer.expire_date=request.POST['expire_date']
         except:
             return HttpResponse("Not sure what happened yet.")
         else:
             prayer.save()
-            return HttpResponseRedirect(reverse('prayer:index'))
+            return HttpResponseRedirect(reverse('prayer:myprayers'))
     else:
         return HttpResponseRedirect(reverse('prayer:index'))
 

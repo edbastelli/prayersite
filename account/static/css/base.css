@@ -1,5 +1,11 @@
 @import url(http://fonts.googleapis.com/css?family=Muli);
 
+/*
+.navbar-brand {
+  font-size: 25px;
+}
+*/
+
 body {
     margin:0;
     padding:0;
@@ -10,6 +16,7 @@ p {
     line-height: 1.8;
 }
 
+/*
 a {
     color:#12c064;
     text-decoration:none;
@@ -18,6 +25,7 @@ a {
 a:hover {
     color:#00a74f;
 }
+*/
 
 h1, h2, h3, h4, h5 , h6 { font-family: 'Muli', sans-serif; font-weight:normal; }
 

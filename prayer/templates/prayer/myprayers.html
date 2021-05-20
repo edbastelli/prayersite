@@ -1,20 +1,18 @@
 {% extends "base.html" %}
 {% load prayer_extras %}
 {% load tz %}
-{% block title %}Home{% endblock %}
+{% block title %}My Prayers{% endblock %}
 {% block content %}
-  <h1>Today's Prayer List</h1>
-  <p>"Rejoice always, pray without ceasing, give thanks in all circumstances; for this is the will of God in Christ Jesus for you."<br>
-  - 1 Thessalonians 5:16-18 (ESV)</p>
-  {% if latest_prayer_list %}
+  <h1>My Prayers</h1>
+  {% if object_list %}
   <p><a href="/prayer/new/">Add a new prayer</a></p>
   <div class="accordion" id="prayerAccordian" style="max-width:600px;">
-    {%for prayer in latest_prayer_list.prayer|getall %}
+    {% for prayer in object_list %}
     <div class="card">
       <div class="card-header" id="heading{{prayer.id}}">
         <h5 class="mb-0">
           <button class="btn btn-link stretched-link" type="button" data-toggle="collapse" data-target="#collapse{{prayer.id}}" aria-expanded="false" aria-controls="collapse{{prayer.id}}">
-            <div {% if prayer.last_prayed_date|localtime|dateof == latest_prayer_list.date %}class="complete"{% endif %}>{{ prayer.prayer_title }}</div>
+            <div>{{ prayer.prayer_title }}</div>
           </button>
         </h5>
       </div>
@@ -23,11 +21,6 @@
           <p>{{ prayer.prayer_text }}</p>
           <p>{{ prayer|displayFrequency }} List | Expires: {{ prayer|expireDate }}</p>
           {% if prayer.id %}
-          <form action="{% url 'prayer:prayed' prayer.id %}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <input type="hidden" id="prayer_id" name="prayer_id" value="{{ prayer.id }}">
-            <input type="submit" style="position:relative; z-index:2;" class="btn btn-dark" value="Prayed">
-          </form>
           <a href="{% url 'prayer:update_prayer' prayer.id %}">
             <button class="btn btn-dark" style="position:relative; z-index:2;">Update</button>
           </a>

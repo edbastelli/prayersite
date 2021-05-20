@@ -48,7 +48,8 @@ class Prayer(models.Model):
         self.save()
 
     def get_absolute_url(self):
-        return reverse('prayer:detail', args=(self.id,))
+        # return reverse('prayer:detail', args=(self.id,))
+        return reverse('prayer:index')
 
 class DailyPrayerList(models.Model):
     class Meta(object):

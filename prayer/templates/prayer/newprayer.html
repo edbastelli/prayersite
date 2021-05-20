@@ -1,20 +1,28 @@
 {% extends "base.html" %}
-{% block title %}Add a New Prayer{% endblock %}
+{% block title %}New Prayer{% endblock %}
 {% block content %}
   <h1>New Prayer</h1>
   <div>
     <form action="{% url 'prayer:create prayer' %}" method="post">
       {% csrf_token %}
+      <p>
       <label for="prayertitle">Prayer title:</label><br>
       <input type="text" name="prayertitle" id="prayertitle" required><br>
+      </p>
+      <p>
       <label for="prayertext">Prayer text:</label><br>
       <textarea name="prayertext" rows="4" cols="40"></textarea><br>
-      <label for="expire_date">Expires:</label><br>
-      <input type="date" name="expire_date" id="expire_Date"><br>
-      <input type="radio" name="frequency" value="-1" id="rotating" checked>
-      <label for="rotating">Add to Rotating List</label>
-      <input type="radio" name="frequency" value="1", id="daily"> <label for="daily">Pray Daily</label>
-      <input type="submit" value="Submit"/>
+      </p>
+      <p>
+        <label for="expire_date">Expires:</label><br>
+        <input type="date" name="expire_date" id="expire_Date">
+      </p>
+      <p>
+        <input type="radio" name="frequency" value="-1" id="rotating" checked>
+        <label for="rotating">Add to Rotating List</label>
+        <input type="radio" name="frequency" value="1", id="daily"> <label for="daily">Pray Daily</label>
+      </p>
+      <input type="submit" class="btn btn-dark" value="Submit"/>
     </form>
   </div>
 {% endblock %}
