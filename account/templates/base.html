@@ -4,39 +4,41 @@
 <head>
   <title>{% block title %}{% endblock%} - PrayerList</title>
   <link rel="stylesheet" href="{% static 'vendor/css/bootstrap.min.css' %}">
-  <link href="{% static "css/base.css" %}" rel="stylesheet">
+  <link href="{% static "prayer/base.css" %}" rel="stylesheet">
   <script src="{% static 'vendor/js/jquery-3.6.0.min.js' %}"></script>
   <script src="{% static 'vendor/js/bootstrap.min.js' %}"></script>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{% url 'prayer:index' %}">PrayerList</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        {% url 'prayer:index' as index_url %}
-        <li class="nav-item {% if request.path == index_url %}active{% endif %}">
-          <a class="nav-link" href="{% url 'prayer:index' %}">Home <span class="sr-only">(current)</span></a>
-        </li>
-        {% url 'prayer:myprayers' as myprayers_url %}
-        <li class="nav-item {% if request.path == myprayers_url %}active{% endif %}">
-          <a class="nav-link" href="{% url 'prayer:myprayers' %}">My Prayers</a>
-        </li>
-        {% url 'dashboard' as dashboard_url %}
-        <li class="nav-item {% if request.path == dashboard_url %}active{% endif %}">
-          <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-        </li>
-      </ul>
-      <span class="navbar-text">
-        {% if request.user.is_authenticated %}
-          Hello {{ request.user.first_name }},
-          <a href="{% url "logout" %}">Logout</a>
-        {% else %}
-          <a href="{% url "login" %}">Log-in</a>
-        {% endif %}
-      </span>
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'prayer:index' %}">PrayerList</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          {% url 'prayer:index' as index_url %}
+          <li class="nav-item {% if request.path == index_url %}active{% endif %}">
+            <a class="nav-link" href="{% url 'prayer:index' %}">Home</a>
+          </li>
+          {% url 'prayer:myprayers' as myprayers_url %}
+          <li class="nav-item {% if request.path == myprayers_url %}active{% endif %}">
+            <a class="nav-link" href="{% url 'prayer:myprayers' %}">My Prayers</a>
+          </li>
+          {% url 'dashboard' as dashboard_url %}
+          <li class="nav-item {% if request.path == dashboard_url %}active{% endif %}">
+            <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+          </li>
+        </ul>
+        <span class="navbar-text ms-auto">
+          {% if request.user.is_authenticated %}
+            Hello {{ request.user.first_name }},
+            <a href="{% url "logout" %}">Logout</a>
+          {% else %}
+            <a href="{% url "login" %}">Log-in</a>
+          {% endif %}
+        </span>
+      </div>
     </div>
   </nav>
 
