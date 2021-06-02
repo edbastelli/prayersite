@@ -3,6 +3,7 @@ import datetime
 from django.utils import timezone
 from django.conf import settings
 from django.urls import reverse
+from copy import deepcopy
 
 # Create your models here.
 class Prayer(models.Model):
@@ -34,6 +35,26 @@ class Prayer(models.Model):
         choices=FREQUENCY_CHOICES,
         default=-1,
         )
+    VISIBILITY_CHOICES = [
+        (0, 'Private'),
+        (1, 'Selective'),
+        (2, 'Public'),
+    ]
+    visibility = models.IntegerField(
+        choices=VISIBILITY_CHOICES,
+        default=0,
+    )
+    visible_to = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='others_prayers',
+    )
+    reference_prayer = models.ForeignKey(
+        "self",
+        related_name="referenced_by",
+        null=True,
+        default=None,
+        on_delete=models.SET_NULL,
+    )
 
     def __str__(self):
         return self.prayer_title
@@ -50,6 +71,16 @@ class Prayer(models.Model):
     def get_absolute_url(self):
         # return reverse('prayer:detail', args=(self.id,))
         return reverse('prayer:index')
+
+    def create_reference_prayer(self, user):
+        p=deepcopy(self)
+        p.pk=None
+        p.reference_prayer=self
+        p.user=user
+        p.created_date=timezone.now()
+        p.last_prayed_date=timezone.now()
+        p.save()
+        return p
 
 class DailyPrayerList(models.Model):
     class Meta(object):
