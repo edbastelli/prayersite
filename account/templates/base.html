@@ -18,16 +18,20 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           {% url 'prayer:index' as index_url %}
-          <li class="nav-item {% if request.path == index_url %}active{% endif %}">
-            <a class="nav-link" href="{% url 'prayer:index' %}">Home</a>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == index_url %}active{% endif %}" href="{% url 'prayer:index' %}">Home</a>
           </li>
           {% url 'prayer:myprayers' as myprayers_url %}
-          <li class="nav-item {% if request.path == myprayers_url %}active{% endif %}">
-            <a class="nav-link" href="{% url 'prayer:myprayers' %}">My Prayers</a>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == myprayers_url %}active{% endif %}" href="{% url 'prayer:myprayers' %}">My Prayers</a>
+          </li>
+          {% url 'prayer:prayerfeed' as prayerfeed_url %}
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == prayerfeed_url %}active{% endif %}" href="{% url 'prayer:prayerfeed' %}">Feed</a>
           </li>
           {% url 'dashboard' as dashboard_url %}
-          <li class="nav-item {% if request.path == dashboard_url %}active{% endif %}">
-            <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == dashboard_url %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
           </li>
         </ul>
         <span class="navbar-text ms-auto">

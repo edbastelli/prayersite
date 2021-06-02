@@ -17,7 +17,6 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         user=self.request.user
         try:
-            # return user.daily_list.get(date=date.today()).prayer.all()
             return user.daily_list.get(date=date.today())
         except ObjectDoesNotExist:
             dlist = user.daily_list.create()
@@ -25,13 +24,11 @@ class IndexView(generic.ListView):
             rotating_prayers=user.prayers.filter(frequency=-1).exclude(expire_date__lt = date.today()).order_by('last_prayed_date')[:3]
             dlist.prayer.set(list(chain(daily_prayers, rotating_prayers)))
             dlist.save()
-            # return user.daily_list.get(date=date.today()).prayer.all()
             return dlist
 
 class MyPrayersView(generic.ListView):
     model = Prayer
     template_name = 'prayer/myprayers.html'
-    # context_object_name = 'all_prayers'
 
     def get_queryset(self):
         user=self.request.user
@@ -40,11 +37,6 @@ class MyPrayersView(generic.ListView):
 class DetailView(generic.DetailView):
     model = Prayer
     template_name = 'prayer/detail.html'
-
-# def index(request):
-#     latest_prayer_list = Prayer.objects.order_by('last_prayed_date')[:20]
-#     context = {'latest_prayer_list': latest_prayer_list}
-#     return render(request, 'prayer/index.html', context)
 
 def detail(request, pk):
     prayer = get_object_or_404(Prayer, pk=pk)
@@ -102,3 +94,19 @@ class PrayerUpdateView(generic.edit.UpdateView):
             return user.prayers.filter(pk=self.kwargs['pk'])
         except ObjectDoesNotExist:
             return HttpResponseRedirect(reverse('prayer:index'))
+
+class PrayerFeed(generic.ListView):
+    model = Prayer
+    template_name = 'prayer/prayerfeed.html'
+
+    def get_queryset(self):
+        user=self.request.user
+        return user.others_prayers.all().order_by('-created_date')
+
+def addToMyList(request):
+    if(request.method == 'POST'):
+        prayer=Prayer.objects.get(pk=request.POST['prayer_id'])
+        prayer.create_reference_prayer(request.user)
+        return HttpResponseRedirect(reverse('prayer:myprayers'))
+    else:
+        return HttpResponseRedirect(reverse('prayer:index'))

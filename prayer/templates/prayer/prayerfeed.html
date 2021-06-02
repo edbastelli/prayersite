@@ -1,34 +1,38 @@
 {% extends "base.html" %}
 {% load prayer_extras %}
 {% load tz %}
-{% block title %}My Prayers{% endblock %}
+{% block title %}Prayer Feed{% endblock %}
 {% block content %}
-  <h1>My Prayers</h1>
+  <h1>Prayer Feed</h1>
   {% if object_list %}
-  <p><a href="/prayer/new/">Add a new prayer</a></p>
   <div class="accordion" id="prayerAccordian" style="max-width:600px;">
     {% for prayer in object_list %}
     <div class="card">
-      <div class="card-header" id="heading{{prayer.id}}">
+      <div class="card-header" id="heading{{prayer.id}}" style="width:100%">
         <h5 class="mb-0">
           <div class='d-flex'>
-            <button class="btn btn-link stretched-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{prayer.id}}" aria-expanded="false" aria-controls="collapse{{prayer.id}}">
+            <button class="btn btn-link stretched-link me-auto" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{prayer.id}}" aria-expanded="false" aria-controls="collapse{{prayer.id}}">
               <div>{{ prayer.prayer_title }}</div>
             </button>
-            {% if prayer.reference_prayer %}
-            <div class='ms-auto'>@{{prayer.reference_prayer.user}}</div>
-            {% endif %}
+            <div class='ms-auto'>@{{ prayer.user }}</div>
           </div>
         </h5>
       </div>
       <div id="collapse{{prayer.id}}" class="collapse" aria-labelledby="heading{{prayer.id}}" data-bs-parent="#prayerAccordian">
         <div class="card-body">
           <p>{{ prayer.prayer_text }}</p>
-          <p>{{ prayer|displayFrequency }} List | Expires: {{ prayer|expireDate }}</p>
+          <p>Expires: {{ prayer|expireDate }}</p>
           {% if prayer.id %}
+          <form action="{% url 'prayer:addtomylist' %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" id="prayer_id" name="prayer_id" value="{{ prayer.id }}">
+            <input type='submit' class='btn btn-dark' style='position:relative; z-index:2;' value="Add to my list">
+          </form>
+          <!--
           <a href="{% url 'prayer:update_prayer' prayer.id %}">
             <button class="btn btn-dark" style="position:relative; z-index:2;">Update</button>
           </a>
+          -->
           {% endif %}
         </div>
       </div>
@@ -36,6 +40,6 @@
     {% endfor %}
   </div>
   {% else %}
-    <p><a href="{% url 'prayer:new prayer' %}">Add your first prayer!</a></p>
+    <p>No prayers currently shared with you.</p>
   {% endif %}
 {% endblock %}
