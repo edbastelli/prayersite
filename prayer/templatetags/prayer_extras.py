@@ -1,5 +1,6 @@
 from django import template
 from datetime import datetime
+from prayer.models import Prayer
 
 register = template.Library()
 

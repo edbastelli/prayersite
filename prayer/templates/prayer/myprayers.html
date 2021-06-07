@@ -26,9 +26,47 @@
           <p>{{ prayer.prayer_text }}</p>
           <p>{{ prayer|displayFrequency }} List | Expires: {{ prayer|expireDate }}</p>
           {% if prayer.id %}
-          <a href="{% url 'prayer:update_prayer' prayer.id %}">
-            <button class="btn btn-dark" style="position:relative; z-index:2;">Update</button>
-          </a>
+            <a href="{% url 'prayer:update_prayer' prayer.id %}" class="unstyled">
+              <button class="btn btn-dark" style="position:relative; z-index:2;">
+                Update
+              </button>
+            </a>
+            {% if prayer.reference_prayer %}
+            {% else %}
+              <button type="button" class="btn btn-dark" style="position:relative; z-index:2;" data-bs-toggle="modal" data-bs-target="#shareModal-{{ prayer.pk }}">
+                Share
+              </button>
+              <!-- Modal -->
+              <div class="modal fade" id="shareModal-{{ prayer.pk }}" tabindex="-1" aria-labelledby="shareModalLabel-{{ prayer.pk }}" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="shareModalLabel-{{ prayer.pk }}">Share this Prayer</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      Share this prayer with your followers<br>
+                      <form id=form-{{ prayer.pk }} action="{% url 'prayer:shareprayer' %}" method="post" >
+                        {% csrf_token %}
+                        <input type="hidden" name="prayerid" id="prayerid" value="{{ prayer.pk }}">
+                        {% for follower in prayer.user.profile.followers|getall %}
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="{{ follower.user.pk }}" id="flexCheck-{{ prayer.pk }}-{{ forloop.counter }}" name="userCheck" {% if follower.user in prayer.visible_to|getall %}checked{% endif %}>
+                            <label class="form-check-label" for="flexCheck-{{ prayer.pk }}-{{ forloop.counter }}">
+                              @{{ follower.user }}<br>
+                            </label>
+                          </div>
+                        {% endfor %}
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" form="form-{{ prayer.pk }}" class="btn btn-primary">Share</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
           {% endif %}
         </div>
       </div>

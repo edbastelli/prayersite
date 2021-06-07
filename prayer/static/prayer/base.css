@@ -16,6 +16,11 @@ p {
     line-height: 1.8;
 }
 
+a.unstyled {
+  color: inherit;
+  text-decoration: inherit;
+}
+
 /*
 a {
     color:#12c064;

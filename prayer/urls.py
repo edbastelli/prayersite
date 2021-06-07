@@ -14,4 +14,5 @@ urlpatterns = [
     path('myprayers', login_required(views.MyPrayersView.as_view()), name='myprayers'),
     path('prayerfeed', login_required(views.PrayerFeed.as_view()), name='prayerfeed'),
     path('addtomylist', login_required(views.addToMyList), name='addtomylist'),
+    path('shareprayer', login_required(views.sharePrayer), name='shareprayer'),
 ]

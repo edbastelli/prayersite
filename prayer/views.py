@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils import timezone
 from django.urls import reverse
 from django.views import generic
+from django.contrib.auth.models import User
 from .models import Prayer, DailyPrayerList
 from itertools import chain
 from datetime import date, datetime
@@ -110,3 +111,14 @@ def addToMyList(request):
         return HttpResponseRedirect(reverse('prayer:myprayers'))
     else:
         return HttpResponseRedirect(reverse('prayer:index'))
+
+def sharePrayer(request):
+    if(request.method == 'POST'):
+        prayer=Prayer.objects.get(pk=request.POST['prayerid'])
+        sharewith=request.POST.getlist('userCheck')
+        for userid in sharewith:
+            prayer.visible_to.add(User.objects.get(pk=userid))
+        prayer.save()
+        return HttpResponseRedirect(reverse('prayer:myprayers'))
+    else:
+        return HttpResponseRedirect(reverse('prayer:myprayers'))
