@@ -1,4 +1,4 @@
-"""mysite URL Configuration
+"""prayersite URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('prayer/', include('prayer.urls')),
+    path('', include('prayer.urls')),
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
 ]
