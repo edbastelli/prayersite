@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Account Settings{% endblock %}
+{% block content %}
+  <h1>Account Settings</h1>
+  <p>Edit your account settings here.</p>
+  <form method="post" enctype="multipart/form-data">
+    {{ settings_form.as_p }}
+    {% csrf_token %}
+    <p><input type="submit" class="btn btn-dark" value="Save changes"></p>
+  </form>
+{% endblock %}

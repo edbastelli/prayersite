@@ -35,6 +35,11 @@ class MyPrayersView(generic.ListView):
         user=self.request.user
         return user.prayers.all().order_by('-created_date')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['today'] = date.today()
+        return context
+
 class DetailView(generic.DetailView):
     model = Prayer
     template_name = 'prayer/detail.html'
@@ -122,3 +127,14 @@ def sharePrayer(request):
         return HttpResponseRedirect(reverse('prayer:myprayers'))
     else:
         return HttpResponseRedirect(reverse('prayer:myprayers'))
+
+def email_daily_list(request):
+    user=request.user
+    try:
+        dlist = user.daily_list.get(date=date.today())
+    except ObjectDoesNotExist:
+        dlist = user.daily_list.create()
+        daily_prayers=user.prayers.filter(frequency=1).exclude(expire_date__lt = date.today())
+        rotating_prayers=user.prayers.filter(frequency=-1).exclude(expire_date__lt = date.today()).order_by('last_prayed_date')[:3]
+        dlist.prayer.set(list(chain(daily_prayers, rotating_prayers)))
+        dlist.save()

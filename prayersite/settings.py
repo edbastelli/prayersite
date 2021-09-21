@@ -26,8 +26,9 @@ SECRET_KEY = 'django-insecure-=stj_#_m#4c+4@ckfezky!!1urym1cbsf&gvoo@xqjns!o^16p
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '192.168.1.70',
     'localhost',
+    '192.168.2.100',
+    'raspberrypi.local',
 ]
 
 
@@ -136,4 +137,12 @@ LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 
 # Email backend for development
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+MAILER_EMAIL_BACKEND = EMAIL_BACKEND
+EMAIL_HOST = 'smtp.mailbox.org'
+EMAIL_HOST_USER = 'ed@bastelli.net'
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 465
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'prayer@bastelli.net'

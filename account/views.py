@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegistrationForm, UserEditForm, ProfileEditForm
+from .forms import UserRegistrationForm, UserEditForm, ProfileEditForm, AccountSettingsForm
 from .models import Profile
 
 # Create your views here.
@@ -46,3 +46,14 @@ def edit(request):
         profile_form = ProfileEditForm(instance=request.user.profile)
     return render(request, 'account/edit.html', {'user_form':user_form,
                                                  'profile_form':profile_form})
+
+@login_required
+def accountSettings(request):
+    if request.method == 'POST':
+        settings_form = AccountSettingsForm(instance=request.user.settings, data=request.POST)
+        if settings_form.is_valid():
+            settings_form.save()
+    else:
+        settings_form = AccountSettingsForm(instance=request.user.settings)
+    return render(request, 'account/accountsettings.html',
+                        {'settings_form':settings_form})

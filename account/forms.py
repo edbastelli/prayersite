@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, AccountSettings
+from django.utils.translation import gettext_lazy as _
 # class LoginForm(forms.Form):
 #     username = forms.CharField()
 #     password = forms.CharField(widget=forms.PasswordInput)
@@ -28,3 +29,11 @@ class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('date_of_birth',)
+
+class AccountSettingsForm(forms.ModelForm):
+    class Meta:
+        model = AccountSettings
+        fields = ('rotating_prayer_num','auto_pray', 'daily_email')
+        labels = {
+            'rotating_prayer_num': _('Daily rotating prayers'),
+        }
